@@ -5,7 +5,7 @@ ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.loc
 
 # Base packages
 RUN apt-get update \
-    && DEBIAN_FRONTEND="noninteractive" apt-get install -y curl git less vim
+    && DEBIAN_FRONTEND="noninteractive" apt-get install -y curl git less unzip vim
 
 RUN curl -L micro.mamba.pm/install.sh | bash \
     && echo ${PATH} \

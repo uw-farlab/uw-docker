@@ -46,9 +46,9 @@ This allows distribution of an echotools and GUTILS container for data
 processing.
 
 NOTE: UW maintains private versions of echotools and GUTILS due until
-      IP issues are apprporiately managed.
+      IP issues are appropriately managed.
 
-Prepare echotools.zip and gutils.zip from appropriate respository and
+Prepare echotools.zip and gutils.zip from respective repositories and
 branches.
 
 ```
