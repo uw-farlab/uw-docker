@@ -45,7 +45,7 @@ jammy        22.04.3LTS   7dde64393ab3   6 minutes ago   374MB
 This allows distribution of an echotools and GUTILS container for data
 processing.
 
-NOTE: UW maintains private versions of echotools and GUTILS due until
+NOTE: UW maintains private versions of echotools and GUTILS until
       IP issues are appropriately managed.
 
 Prepare echotools.zip and gutils.zip from respective repositories and
