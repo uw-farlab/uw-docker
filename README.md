@@ -55,8 +55,17 @@ branches.
 # docker build -t jcerma/dev:echotools -f echotools/Dockerfile .
 ```
 
+To capture the full build output for debugging:
 ```
-# docker run --name echotools-run -d jcerma/dev:echotools
+# docker build --no-cache --progress=plain -t jcerma/dev:echotools \
+      -f echotools/Dockerfile . >& build.log
+```
+
+Run the container and mount the directory for processing glider files.
+```
+# docker run \
+      --mount type=bind,source=/home/portal/glider/test,target=/deployment \
+      --name echotools-run -d jcerma/dev:echotools
 ```
 
 ```

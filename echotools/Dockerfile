@@ -9,6 +9,10 @@ ENV PIP_ROOT_USER_ACTION=ignore
 # Temp dir required for unit tests.
 RUN mkdir /temp/
 
+# Create deployments directory for 
+# data processing
+RUN mkdir /deployments/
+
 # Load private resources
 COPY echotools.zip .
 COPY gutils.zip .
@@ -50,6 +54,8 @@ RUN cd pyEcholab && \
     micromamba install -q -y \
         --file requirements.txt && \
     python -m pip install .
+
+# Install IOOS Compliance Checker and plugins
 
 # Install gutils
 RUN cd gutils && \
