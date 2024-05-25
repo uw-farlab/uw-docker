@@ -23,7 +23,12 @@ RUN unzip -q gutils.zip
 
 # Development packages
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y \
-    gcc
+    gcc software-properties-common
+
+# Enable universe repository
+RUN add-apt-repository -y universe && apt update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    gosu
 
 # Create environment
 RUN micromamba create -q -y --name py311 python=3.11
@@ -75,6 +80,11 @@ RUN cd echotools/echotools-libs && \
     pyb && \
     cd target/dist/echotools-0.2.1 && \
     python -m pip install .
+
+# Cleanup
+RUN eval "$(micromamba shell hook --shell bash)" && \
+    micromamba clean --all -y -f && \
+    apt-get clean
 
 # Make this container runnable
 COPY ./base/bin/entrypoint.sh /

@@ -62,12 +62,51 @@ To capture the full build output for debugging:
 ```
 
 Run the container and mount the directory for processing glider files.
+Pass any optional metadata to help with setting appropriate permissions
+on the passed directory.
 ```
 # docker run \
-      --mount type=bind,source=/home/portal/glider/test,target=/deployment \
+      --mount type=bind,source=/home/portal/glider/test,target=/deployments \
+      --env USER_ID=1063 --env GROUP_ID=100 \
+      --env USER_NAME=portal --env GROUP_NAME=users \
       --name echotools-run -d jcerma/dev:echotools
 ```
 
 ```
 # docker exec -it echotools-run bash
 ```
+
+Within the container, verify that you can access one of the
+scripts:
+```
+$ sudo docker exec -it echotools-run gosu portal bash
+$ cd
+$ micromamba activate py311
+$ mkGIS.py --help
+usage: mkGIS.py [-h] [--deploymentDir DEPLOYMENTDIR] [-u U] [-d D] [-p P] [-t T] [--portalJson] [--bathy] [--evl] [--gps] [--outDir OUTDIR] [--evlOut EVLOUT] [--gpsOut GPSOUT]
+                [--logFile LOGFILE] [--preload]
+
+mkGIS.py: This program produces several types of metadata files from processed glider data.
+
+options:
+  -h, --help            show this help message and exit
+  --deploymentDir DEPLOYMENTDIR
+                        full or relative path to deployment config files
+  -u U                  glider name
+  -d D                  deployment name
+  -p P                  processing pipeline: echotools or gutils
+  -t T                  glider file type: rt, rtd or delayed
+  --portalJson          generate portal json gis output
+  --bathy               generate subset bathymetric datasets
+  --evl                 generate EVL file
+  --gps                 generate GPS.CSV file
+  --outDir OUTDIR       alternate output directory for all requested files
+  --evlOut EVLOUT       alternate output filename for EVL file
+  --gpsOut GPSOUT       alternate output filename for GPS.CSV file
+  --logFile LOGFILE     Allows saving of output to a log file
+  --preload             Load glider data fully into memory before use
+```
+
+## References
+
+ * [entrypoint.sh](https://github.com/Unidata/tomcat-docker/blob/latest/entrypoint.sh)
