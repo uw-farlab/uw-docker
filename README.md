@@ -137,15 +137,21 @@ exec command to enter the container.  NOTE: The first time
 running the container, the /home directory has to be adjusted.
 It may be a minute or so before the home directory is usable.
 ```
-# Check that things are usable without error.  Run the 
-# command below until no error is returned.
+# An error should be returned if the container is
+# not yet initialized.
 
 # docker exec -u portal -w /home/portal -it echotools-run ls
 ls: cannot open directory '.': Permission denied
 
-# This is what it should return
-# docker exec -u portal -w /home/portal -it echotools-run ls
-micromamba  src
+# The container log can be consulted to verify that the
+# container is initialized after the first initial use.
+# docker container logs echotools-run
+START: Initializing container for first use.
+portal 1063 users 100
+Adding system user `portal' (UID 1063) ...
+Adding new user `portal' (UID 1063) with group `users' ...
+Creating home directory `/home/portal' ...
+DONE: Container initialized.
 
 # docker exec -u portal -w /home/portal -it echotools-run bash
 ```
