@@ -29,7 +29,7 @@ COPY ./base/bin/setgroup.sh /
 # Base packages
 # Save the default user name and group name for the container
 RUN apt-get update && \
-    DEBIAN_FRONTEND="noninteractive" apt-get install -y curl git less unzip vim && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y curl file git less unzip vim && \
     ./setgroup.sh && \
     adduser --system --uid ${USER_ID} --gid ${GROUP_ID} --gecos "" \
         --home /home/${USER_NAME} ${USER_NAME} && \
@@ -44,7 +44,7 @@ WORKDIR /home/${USER_NAME}
 
 # Mamba
 # REF: https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html
-RUN curl -L micro.mamba.pm/install.sh | bash && \
+RUN curl -sLS micro.mamba.pm/install.sh | bash && \
     source  ~/.bashrc && \
     micromamba self-update
 

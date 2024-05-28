@@ -39,6 +39,7 @@ RUN sudo mkdir /temp/ && \
 # Copy private resources
 COPY echotools.zip src/
 COPY gutils.zip src/ 
+COPY compliance/cf-standard-name-table.xml /deployments/
 
 # Unpack private resources
 RUN cd src && unzip -q echotools.zip && unzip -q gutils.zip
@@ -88,10 +89,6 @@ RUN cd src && \
     git clone --branch main https://github.com/uw-farlab/cc-plugin-ugrid.git && \
     eval "$(micromamba shell hook --shell bash)" && \
     micromamba activate py311 && \
-    cd cc-plugin-glider && \
-    micromamba install -q -y --file requirements.txt && \
-    python -m pip install . && \
-    cd .. && \
     cd cc-plugin-ncei && \
     micromamba install -q -y --file requirements.txt && \
     python -m pip install . && \
@@ -101,6 +98,10 @@ RUN cd src && \
     python -m pip install . && \
     cd .. && \
     cd cc-plugin-ugrid && \
+    micromamba install -q -y --file requirements.txt && \
+    python -m pip install . && \
+    cd .. && \
+    cd cc-plugin-glider && \
     micromamba install -q -y --file requirements.txt && \
     python -m pip install .
 
