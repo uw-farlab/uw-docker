@@ -60,7 +60,7 @@ RUN eval "$(micromamba shell hook --shell bash)" && \
     iniconfig lz4 packaging numpy pluggy pytest
 RUN eval "$(micromamba shell hook --shell bash)" && \
     micromamba activate py311 && \
-    python -m pip install dbdreader
+    python -m pip install --no-deps dbdreader
 
 # Load git based resources
 RUN cd src && git clone --branch uwmain https://github.com/uw-farlab/pocean-core.git && \
@@ -70,7 +70,7 @@ RUN cd src && git clone --branch uwmain https://github.com/uw-farlab/pocean-core
     micromamba install -q -y \
         --file requirements.txt \
         --file requirements-dev.txt && \
-    python -m pip install .
+    python -m pip install --no-deps .
 
 RUN cd src && git clone --branch ek80validation https://github.com/jr3cermak/pyEcholab.git && \
     cd pyEcholab && \
@@ -78,7 +78,7 @@ RUN cd src && git clone --branch ek80validation https://github.com/jr3cermak/pyE
     micromamba activate py311 && \
     micromamba install -q -y \
         --file requirements.txt && \
-    python -m pip install .
+    python -m pip install --no-deps .
 
 # Install IOOS Compliance Checker and plugins
 RUN cd src && \
@@ -91,28 +91,34 @@ RUN cd src && \
     micromamba activate py311 && \
     cd cc-plugin-ncei && \
     micromamba install -q -y --file requirements.txt && \
-    python -m pip install . && \
+    python -m pip install --no-deps . && \
     cd .. && \
     cd cc-plugin-og && \
     micromamba install -q -y --file requirements.txt && \
-    python -m pip install . && \
+    python -m pip install --no-deps . && \
     cd .. && \
     cd cc-plugin-ugrid && \
     micromamba install -q -y --file requirements.txt && \
-    python -m pip install . && \
+    python -m pip install --no-deps . && \
     cd .. && \
     cd cc-plugin-glider && \
     micromamba install -q -y --file requirements.txt && \
-    python -m pip install .
+    python -m pip install --no-deps . && \
+    cd .. && \
+    cd compliance-checker && \
+    micromamba install -q -y --file requirements.txt && \
+    python -m pip install --no-deps .
 
 # Install gutils
+# Do not install these requirements again
 RUN cd src/gutils && \
     eval "$(micromamba shell hook --shell bash)" && \
     micromamba activate py311 && \
+    sed -i -e '/^cc-plugin-glider.*/d' -e '/^compliance.*/d' -e '/^pocean-core.*/d' requirements.txt && \
     micromamba install -q -y \
         --file requirements.txt \
         --file requirements-dev.txt && \
-    python -m pip install .
+    python -m pip install --no-deps .
 
 # Install echotools-lib
 RUN cd src/echotools/echotools-libs && \
@@ -122,15 +128,7 @@ RUN cd src/echotools/echotools-libs && \
         --file requirementsConda.txt && \
     pyb && \
     cd target/dist/echotools-0.2.1 && \
-    python -m pip install .
-
-# Reinstall compliance checker
-RUN cd src && \
-    eval "$(micromamba shell hook --shell bash)" && \
-    micromamba activate py311 && \
-    cd compliance-checker && \
-    micromamba install -q -y --file requirements.txt && \
-    python -m pip install .
+    python -m pip install --no-deps .
 
 # Cleanup
 RUN eval "$(micromamba shell hook --shell bash)" && \

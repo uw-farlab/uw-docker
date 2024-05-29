@@ -186,6 +186,95 @@ options:
   --preload             Load glider data fully into memory before use
 ```
 
+## Processing a deployment using GUTILS
+
+Near real time processing identical to delayed mode
+processing.  The only thing that is different is
+the directory paths.
+
+In this example, we have a deployment (`20230321`) for glider (`unit_507`)
+that we wish to process into netCDF files to inject into the data
+management pipeline.
+
+In the example above, the directory on the host is
+`/home/portal/glider/test`. This is mounted to the container
+using the directory `/deployments`.  Both directories have
+the same information and provides the pathway of communication
+between the host and the container.
+
+The `/deployments` directory will be referred to as the
+deployment root (DR).
+
+The following directory hierarchy is now observed within
+the deployment root:
+
+```
+${DR}/${GLIDER}/${DEPLOYMENT}
+
+DR: Deployment Root
+GLIDER: Glider name (unit_507)
+DEPLOYMENT: Typically the first day of a deployment
+```
+
+The directory hierarch within the `${DEPLOYMENT}` is:
+
+```
+config/
+log/
+${PROCESS}/${MODE}/
+                   ascii
+                   binary
+                   netcdf
+```
+
+The two available processing methods are `echotools`
+and `gutils`.
+
+### Setup
+
+For each deployment, a set of configuration files
+needs to be placed into the `config` directory.
+
+The following files are required:
+ * Glider cache files (`*.cac`)
+ * echotools.json
+ * deployment.json
+ * instruments.json
+
+A `gutilsProcessRT.sh` can be copied to the deployment
+directory.  The environment variables need to be
+adjusted to match the deployment being processed.
+
+```
+DR="/deployments"
+FT="Glider 507 March 2023 GOA Survey"
+DEP="20230321"
+GLIDER="unit_507"
+```
+
+### Staging
+
+Raw glider files should be copied into the binary
+directory.
+
+For near real time glider files, the files should
+reside in the directory `gutils/rt/binary`.  For
+post processing delayed mode data, the binary files
+need to be in the `gutils/rt/delayed` directory.
+
+### Processing
+
+To process the above deployment from the host using the container:
+```
+$ sudo docker exec -u portal -w /home/portal -it echotools-run bash /deployments/unit_507/20230321/gutilsProcessRT.sh
+```
+
+If all goes well, the binary data is processed into netCDF files which
+can be found in the `gutils/{rt,delayed}/netcdf` directory.
+
+If there is a processing error, those will be noted in the log
+directory with a log file called `gutils.log`.
+
 ## References
 
  * [Dockerfile](https://docs.docker.com/reference/dockerfile/)
