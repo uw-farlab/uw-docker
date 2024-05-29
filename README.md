@@ -5,6 +5,8 @@ Fisheries Acoustic Research Lab (uw-farlab)
 
 The images are hosted at [hub.docker.com/jcerma](https://hub.docker.com/repositories/jcerma).
 
+[References](docs/references.md)
+
 ## dev images
 
 ### jcerma/jammy

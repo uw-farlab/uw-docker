@@ -1,6 +1,6 @@
 # echotools
 
-# Image construction
+## Image construction
 
 This allows distribution of an echotools and GUTILS container for data
 processing.
@@ -44,6 +44,22 @@ With custom arguments:
   --build-arg GROUP_ID=${GROUP_ID} \
   -f echotools/Dockerfile . 2>&1 | tee build.log
 ```
+
+## Image distribution
+
+This image may be exported for distribution.
+
+```
+$ sudo docker save jcerma/dev:echotools | xz -z > echotools.tar.xz
+```
+
+To restore the image:
+
+```
+$ sudo docker load < xz -d echotools.tar.xz
+```
+
+## Operation
 
 Run the container and mount the directory for processing glider files.
 Pass any optional metadata to help with setting appropriate permissions
